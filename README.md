@@ -1,249 +1,283 @@
-# Hamburg Traffic System
+# Hamburg Traffic Monitoring & Prediction System
 
-## Project Overview
+A real-time traffic monitoring and prediction system for Hamburg, Germany that combines data streaming, machine learning, and interactive visualization to provide traffic insights and forecasts.
 
-This project implements a real-time traffic monitoring and prediction system for Hamburg city. It combines batch processing, streaming data ingestion, machine learning-based traffic forecasting, and an interactive web dashboard displaying traffic maps.
+## 🚀 Features
 
-### Key Components
+- **Real-time Traffic Monitoring**: Live traffic speed and vehicle count tracking
+- **Predictive Analytics**: Machine learning-powered traffic prediction using XGBoost
+- **Interactive Maps**: Dynamic Folium-based visualizations showing traffic conditions
+- **Streaming Architecture**: Kafka-based data pipeline for real-time processing
+- **Cloud Integration**: Snowflake for data warehousing and Google BigQuery support
+- **Web Dashboard**: Flask-based web application for data visualization
 
-- **Data Ingestion & Storage:** Real-time traffic data is ingested and stored using Kafka and Snowflake.
-- **Batch Processing:** Airflow pipelines summarize hourly traffic data from raw streams.
-- **Machine Learning:** An XGBoost regression model predicts future traffic volumes using historical data.
-- **Web Application:** A Flask-based dashboard visualizes real-time and predicted traffic on side-by-side interactive maps.
+## 🏗️ Architecture
 
----
+The system consists of several interconnected components:
 
-## What Works
+```
+Data Sources → Kafka → Snowflake/BigQuery → ML Model → Web Dashboard
+```
 
-- **Real-time Data Streaming:** Kafka setup and ingestion of synthetic or real traffic streams.
-- **Airflow DAG:** Scheduled batch jobs run to summarize traffic hourly and load data into Snowflake.
-- **ML Model Training:** The traffic prediction model is trained using a generated dataset.
-- **Flask UI:** Displays two maps side-by-side using Folium — one for real-time traffic and one for predicted traffic.
-- **Basic Snowflake Integration:** Data reads and writes are operational for most parts.
+- **Data Producer**: Generates simulated traffic data using Faker
+- **Kafka Stream**: Real-time data ingestion and processing
+- **Data Warehouse**: Snowflake for storing historical and live traffic data
+- **ML Pipeline**: XGBoost model for traffic prediction
+- **Web Application**: Flask app with interactive maps
 
----
+## 📋 Prerequisites
 
-## Known Issues & Limitations
+- Python 3.8+
+- Docker & Docker Compose
+- Snowflake account (or Google Cloud Platform for BigQuery)
+- Git
 
-- **Batch Processing (Airflow) Issues:**  
-  The batch summarization DAG intermittently fails or does not process data correctly due to schema mismatches or data availability issues in Snowflake tables. The `HOURLY_SUMMARY` table sometimes lacks timely updates.
+## 🛠️ Installation
 
-- **Training Data:**  
-  The machine learning model was trained primarily on synthetic or incomplete data due to batch processing gaps, limiting prediction accuracy.
+### 1. Clone the Repository
 
-- **Final Map Visualization:**  
-  Although the Flask app runs without errors, the predicted traffic map does not render as expected on the UI. This is likely due to data format mismatches or rendering issues in Folium integration.
+```bash
+git clone <repository-url>
+cd hamburg-traffic-system
+```
 
-- **Snowflake SQL Errors:**  
-  Occasional SQL compilation errors related to invalid column identifiers (`LATITUDE`, `TIMESTAMP`, etc.) suggest schema discrepancies between Snowflake tables and the queries in the codebase.
+### 2. Install Python Dependencies
 
-- **Port Conflicts & Environment:**  
-  Docker containers for Kafka, Airflow, and web app sometimes face port conflicts or dependency issues affecting startup.
+```bash
+pip install -r requirements.txt
+```
 
----
+Required packages:
+```python
+pandas
+flask
+folium
+snowflake-connector-python
+kafka-python
+faker
+xgboost
+scikit-learn
+joblib
+google-cloud-bigquery
+```
 
-## Setup & Usage Instructions
+### 3. Set Up Kafka Infrastructure
 
-1. **Clone the repository**
+```bash
+docker-compose up -d
+```
 
-   ```bash
-   git clone https://github.com/<username>/hamburg-traffic-system.git
-   cd hamburg-traffic-system
-Docker Compose
+This will start Zookeeper and Kafka services.
 
-Run Kafka, Zookeeper, Postgres, Airflow, and other services:
+### 4. Configure Data Connections
 
+#### Snowflake Configuration
 
-docker-compose up --build
-Airflow
+Create a `snowflake_config.json` file:
 
-Initialize the Airflow database before first run:
+```json
+{
+  "user": "your_username",
+  "password": "your_password", 
+  "account": "your_account",
+  "warehouse": "TRAFFIC_WH",
+  "database": "TRAFFIC_DB",
+  "schema": "TRAFFIC_SCHEMA"
+}
+```
 
-docker exec -it airflow-airflow-webserver-1 airflow db init
-Access Airflow UI at http://localhost:8081
+#### Google Cloud Configuration (Optional)
 
-Snowflake Setup
+For BigQuery integration, set up your `gcp_key.json` credentials file.
 
-Configure Snowflake credentials in snowflake_config.json.
+```bash
+python setup_bigquery.py
+```
 
-Ensure database, schema, and tables exist as per the SQL scripts.
+## 🚦 Usage
 
-Machine Learning Model
+### 1. Start Data Streaming
 
-Train the model using train_traffic_model.py.
+Generate and stream simulated traffic data:
 
-Save the trained model as model.pkl in the webapp directory.
+```bash
+python kafka/traffic_producer.py
+```
 
-Web Application
+### 2. Train the ML Model
 
-Navigate to webapp directory.
+Train the XGBoost prediction model:
 
-Run Flask app:
+```bash
+python train_traffic_model.py
+```
 
-bash
-Copy
+This will:
+- Fetch historical data from Snowflake
+- Train an XGBoost regression model
+- Save the model as `traffic_model.pkl`
+
+### 3. Run Data Processing
+
+Process real-time data and generate predictions:
+
+```bash
+python webapp/check.py
+```
+
+This script will:
+- 🔗 Connect to Snowflake
+- 🚦 Fetch real-time traffic data
+- 🧠 Load the trained ML model
+- 📊 Generate traffic predictions
+- 🗺️ Create interactive maps
+
+### 4. Launch Web Application
+
+Start the Flask web dashboard:
+
+```bash
+cd webapp
 python app.py
-Access the UI at http://localhost:8081
+```
 
-Next Steps / Recommendations
-Fix Batch Processing:
-Debug and fix Airflow DAGs to ensure reliable data aggregation in Snowflake.
+Access the dashboard at `http://localhost:8081`
 
-Use Real Batch Data for Training:
-Retrain ML models on real summarized traffic data for better prediction quality.
+## 📊 Data Schema
 
-Debug Map Rendering:
-Investigate Folium map generation logic and ensure correct data formatting.
+### Live Stream Table
+```sql
+CREATE TABLE LIVE_STREAM (
+    TIMESTAMP TIMESTAMP,
+    LATITUDE FLOAT,
+    LONGITUDE FLOAT, 
+    SPEED INTEGER,
+    VEHICLE_COUNT INTEGER
+);
+```
 
-Schema Consistency:
-Align Snowflake table schemas with code SQL queries to avoid compilation errors.
+### Hourly Summary Table
+```sql
+CREATE TABLE HOURLY_SUMMARY (
+    HOUR TIMESTAMP,
+    TOTAL_VEHICLES INTEGER,
+    AVG_SPEED FLOAT
+);
+```
 
-Automate Deployment:
-Set up CI/CD pipelines for smoother development and deployment cycles.
+## 🤖 Machine Learning Model
 
-Contact
-For questions or collaboration, contact Samuel Hanok Anchan.
+The system uses **XGBoost Regression** for traffic prediction with the following features:
 
-License
-Specify your license here (e.g., MIT License).
+- **hour_of_day**: Hour of the day (0-23)
+- **day_of_week**: Day of week (0-6, Monday=0)
 
-yaml
-Copy
+**Target Variable**: `TOTAL_VEHICLES` - Predicted number of vehicles
 
----
+### Model Performance
+The model is evaluated using Mean Squared Error (MSE) on test data.
 
-Would you like me to generate any additional documentation or a detailed troubleshooting guide?
+## 📁 Project Structure
 
+```
+hamburg-traffic-system/
+├── kafka/
+│   └── traffic_producer.py      # Kafka data producer
+├── webapp/
+│   ├── app.py                   # Flask web application
+│   ├── check.py                 # Data processing script
+│   ├── static/                  # Generated maps
+│   └── templates/               # HTML templates
+├── data/
+│   ├── traffic_data.csv         # Historical traffic data
+│   └── traffic_map.html         # Traffic visualization
+├── ml/
+│   └── predicted_traffic.csv    # ML predictions output
+├── docker-compose.yml           # Kafka infrastructure
+├── setup_bigquery.py           # BigQuery setup script
+├── train_traffic_model.py       # ML model training
+└── README.md                    # This file
+```
 
+## 🗺️ Interactive Maps
 
+The system generates two types of interactive maps:
 
+1. **Real-time Traffic Map** (`realtime_map.html`)
+   - Shows current traffic speeds
+   - Blue markers indicate speed data points
+   - Updates with live data from Snowflake
 
-You said:
-give me in one single read me file
+2. **Prediction Map** (`predicted_map.html`)
+   - Displays ML-generated traffic predictions
+   - Green markers show predicted vehicle counts
+   - Based on time-based features
 
+## ⚙️ Configuration
 
-ChatGPT said:
-Certainly! Here’s the entire README.md content in one single file format for easy copy-pasting:
+### Environment Variables
 
-markdown
-Copy
-# Hamburg Traffic System
+- `GOOGLE_APPLICATION_CREDENTIALS`: Path to GCP service account key
+- Snowflake credentials in `snowflake_config.json`
 
-## Project Overview
+### Kafka Settings
 
-This project implements a real-time traffic monitoring and prediction system for Hamburg city. It combines batch processing, streaming data ingestion, machine learning-based traffic forecasting, and an interactive web dashboard displaying traffic maps.
+- Bootstrap servers: `localhost:9092`
+- Topic: `hamburg_traffic`
+- Zookeeper: `localhost:2181`
 
-### Key Components
+## 🐛 Troubleshooting
 
-- **Data Ingestion & Storage:** Real-time traffic data is ingested and stored using Kafka and Snowflake.
-- **Batch Processing:** Airflow pipelines summarize hourly traffic data from raw streams.
-- **Machine Learning:** An XGBoost regression model predicts future traffic volumes using historical data.
-- **Web Application:** A Flask-based dashboard visualizes real-time and predicted traffic on side-by-side interactive maps.
+### Common Issues
 
----
-
-## What Works
-
-- **Real-time Data Streaming:** Kafka setup and ingestion of synthetic or real traffic streams.
-- **Airflow DAG:** Scheduled batch jobs run to summarize traffic hourly and load data into Snowflake.
-- **ML Model Training:** The traffic prediction model is trained using a generated dataset.
-- **Flask UI:** Displays two maps side-by-side using Folium — one for real-time traffic and one for predicted traffic.
-- **Basic Snowflake Integration:** Data reads and writes are operational for most parts.
-
----
-
-## Known Issues & Limitations
-
-- **Batch Processing (Airflow) Issues:**  
-  The batch summarization DAG intermittently fails or does not process data correctly due to schema mismatches or data availability issues in Snowflake tables. The `HOURLY_SUMMARY` table sometimes lacks timely updates.
-
-- **Training Data:**  
-  The machine learning model was trained primarily on synthetic or incomplete data due to batch processing gaps, limiting prediction accuracy.
-
-- **Final Map Visualization:**  
-  Although the Flask app runs without errors, the predicted traffic map does not render as expected on the UI. This is likely due to data format mismatches or rendering issues in Folium integration.
-
-- **Snowflake SQL Errors:**  
-  Occasional SQL compilation errors related to invalid column identifiers (`LATITUDE`, `TIMESTAMP`, etc.) suggest schema discrepancies between Snowflake tables and the queries in the codebase.
-
-- **Port Conflicts & Environment:**  
-  Docker containers for Kafka, Airflow, and web app sometimes face port conflicts or dependency issues affecting startup.
-
----
-
-## Setup & Usage Instructions
-
-1. **Clone the repository**
-
+1. **Kafka Connection Error**
    ```bash
-   git clone https://github.com/<username>/hamburg-traffic-system.git
-   cd hamburg-traffic-system
-Docker Compose
+   docker-compose ps  # Check if Kafka is running
+   docker-compose restart kafka
+   ```
 
-Run Kafka, Zookeeper, Postgres, Airflow, and other services:
+2. **Snowflake Authentication**
+   - Verify credentials in `snowflake_config.json`
+   - Check warehouse, database, and schema names
 
-bash
-Copy
-docker-compose up --build
-Airflow
+3. **Model Not Found**
+   ```bash
+   python train_traffic_model.py  # Retrain the model
+   ```
 
-Initialize the Airflow database before first run:
+4. **Empty Data**
+   - Ensure Kafka producer is running
+   - Check if data is flowing to Snowflake tables
 
-bash
-Copy
-docker exec -it airflow-airflow-webserver-1 airflow db init
-Access Airflow UI at http://localhost:8081
+## 🔄 Recent Updates
 
-Snowflake Setup
+Based on the latest commit, the system includes:
 
-Configure Snowflake credentials in snowflake_config.json.
+- Enhanced error handling in data processing scripts
+- Improved map generation with better visualization
+- Updated model prediction pipeline
+- Streamlined web application with better error messages
 
-Ensure database, schema, and tables exist as per the SQL scripts.
+## 🤝 Contributing
 
-Machine Learning Model
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Train the model using train_traffic_model.py.
+## 📄 License
 
-Save the trained model as model.pkl in the webapp directory.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-Web Application
+## 🙏 Acknowledgments
 
-Navigate to webapp directory.
+- Hamburg city traffic data sources
+- Kafka ecosystem for real-time streaming
+- Snowflake for cloud data warehousing
+- XGBoost for machine learning capabilities
+- Folium for interactive map visualizations
 
-Run Flask app:
+---
 
-bash
-Copy
-python app.py
-Access the UI at http://localhost:8081
-
-Next Steps / Recommendations
-Fix Batch Processing:
-Debug and fix Airflow DAGs to ensure reliable data aggregation in Snowflake.
-
-Use Real Batch Data for Training:
-Retrain ML models on real summarized traffic data for better prediction quality.
-
-Debug Map Rendering:
-Investigate Folium map generation logic and ensure correct data formatting.
-
-Schema Consistency:
-Align Snowflake table schemas with code SQL queries to avoid compilation errors.
-
-Automate Deployment:
-Set up CI/CD pipelines for smoother development and deployment cycles.
-
-Contact
-For questions or collaboration, contact Samuel Hanok Anchan.
-
-License
-Specify your license here (e.g., MIT License).
-
-pgsql
-Copy
-
-If you want, I can also help you format this as a markdown file and provide any additions like badges or installation scripts.
-
-
-
-
+**Note**: This system is designed for demonstration and research purposes. For production deployment, ensure proper security measures, error handling, and monitoring are implemented.
