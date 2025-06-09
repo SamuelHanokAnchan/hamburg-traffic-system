@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_28a6a0898eba83a33992536b20c42bc4 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_28a6a0898eba83a33992536b20c42bc4" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_28a6a0898eba83a33992536b20c42bc4 = L.map(
+                "map_28a6a0898eba83a33992536b20c42bc4",
+                {
+                    center: [53.5511, 9.9937],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_ea47cdcba151c24d1a74b6c53ad77104 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_ea47cdcba151c24d1a74b6c53ad77104.addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var heat_map_bfd20bab9cabe3438a2a621d2dd78d2d = L.heatLayer(
+                [[53.5511, 9.9937, 10], [53.5407, 9.9961, 8], [53.5497, 9.9603, 9], [53.5525, 9.9355, 6], [53.5685, 10.0714, 5], [53.4609, 9.9872, 3], [53.4892, 10.2314, 3], [53.5644, 9.7975, 3], [53.5676, 9.9906, 8], [53.5914, 9.9981, 6]],
+                {
+  "minOpacity": 0.4,
+  "maxZoom": 18,
+  "radius": 30,
+  "blur": 25,
+  "gradient": {
+  0.4: "green",
+  0.6: "lime",
+  0.8: "orange",
+  1.0: "red",
+},
+}
+            );
+        
+    
+            heat_map_bfd20bab9cabe3438a2a621d2dd78d2d.addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var marker_2dfd86bfb0b52fc46a2944fcefc6b28c = L.marker(
+                [53.5511, 9.9937],
+                {
+}
+            ).addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var icon_dfdd41d96ab758538fb908d259464994 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "warning-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b047d38f7ef33eb43d3af82edb9c9942 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c89eec185dc12564deec4bc6f2c72427 = $(`<div id="html_c89eec185dc12564deec4bc6f2c72427" style="width: 100.0%; height: 100.0%;">                         <b>🔮 Altstadt Prediction</b><br>                         🚗 Expected Vehicles: 10<br>                         🏃 Expected Speed: 32 km/h<br>                         🕐 Time: +1h from now<br>                         📅 2025-06-09T14:30                         </div>`)[0];
+                popup_b047d38f7ef33eb43d3af82edb9c9942.setContent(html_c89eec185dc12564deec4bc6f2c72427);
+            
+        
+
+        marker_2dfd86bfb0b52fc46a2944fcefc6b28c.bindPopup(popup_b047d38f7ef33eb43d3af82edb9c9942)
+        ;
+
+        
+    
+    
+                marker_2dfd86bfb0b52fc46a2944fcefc6b28c.setIcon(icon_dfdd41d96ab758538fb908d259464994);
+            
+    
+            var marker_3c093dd054fdf7734d93df2dc437681d = L.marker(
+                [53.5407, 9.9961],
+                {
+}
+            ).addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var icon_49ea131585b071ac27ccb635c8a2d2a8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "ok-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_64d9975ef4093b90ac4ffd195e7c24e2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_dd7ebdab5050610fe56d2a32d0496517 = $(`<div id="html_dd7ebdab5050610fe56d2a32d0496517" style="width: 100.0%; height: 100.0%;">                         <b>🔮 HafenCity Prediction</b><br>                         🚗 Expected Vehicles: 8<br>                         🏃 Expected Speed: 42 km/h<br>                         🕐 Time: +1h from now<br>                         📅 2025-06-09T14:30                         </div>`)[0];
+                popup_64d9975ef4093b90ac4ffd195e7c24e2.setContent(html_dd7ebdab5050610fe56d2a32d0496517);
+            
+        
+
+        marker_3c093dd054fdf7734d93df2dc437681d.bindPopup(popup_64d9975ef4093b90ac4ffd195e7c24e2)
+        ;
+
+        
+    
+    
+                marker_3c093dd054fdf7734d93df2dc437681d.setIcon(icon_49ea131585b071ac27ccb635c8a2d2a8);
+            
+    
+            var marker_730631fd2101cc1daa9756033edd1fa0 = L.marker(
+                [53.5497, 9.9603],
+                {
+}
+            ).addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var icon_46934dbfe726bec6c7e680ff265f15c2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "warning-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4ff14f288e73fc7311d74ecc10ebc880 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_596fb8490267e14dcfd172760debd6ce = $(`<div id="html_596fb8490267e14dcfd172760debd6ce" style="width: 100.0%; height: 100.0%;">                         <b>🔮 St. Pauli Prediction</b><br>                         🚗 Expected Vehicles: 9<br>                         🏃 Expected Speed: 41 km/h<br>                         🕐 Time: +1h from now<br>                         📅 2025-06-09T14:30                         </div>`)[0];
+                popup_4ff14f288e73fc7311d74ecc10ebc880.setContent(html_596fb8490267e14dcfd172760debd6ce);
+            
+        
+
+        marker_730631fd2101cc1daa9756033edd1fa0.bindPopup(popup_4ff14f288e73fc7311d74ecc10ebc880)
+        ;
+
+        
+    
+    
+                marker_730631fd2101cc1daa9756033edd1fa0.setIcon(icon_46934dbfe726bec6c7e680ff265f15c2);
+            
+    
+            var marker_e3e5ab1289b56e76ad8962f5b71523e6 = L.marker(
+                [53.5525, 9.9355],
+                {
+}
+            ).addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var icon_32b038f907254455c929681e03f5b581 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "ok-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ce22fb9bc1e449979f25995899616e66 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_dd7a18921b919fa103eef677dd15f1b4 = $(`<div id="html_dd7a18921b919fa103eef677dd15f1b4" style="width: 100.0%; height: 100.0%;">                         <b>🔮 Altona Prediction</b><br>                         🚗 Expected Vehicles: 6<br>                         🏃 Expected Speed: 43 km/h<br>                         🕐 Time: +1h from now<br>                         📅 2025-06-09T14:30                         </div>`)[0];
+                popup_ce22fb9bc1e449979f25995899616e66.setContent(html_dd7a18921b919fa103eef677dd15f1b4);
+            
+        
+
+        marker_e3e5ab1289b56e76ad8962f5b71523e6.bindPopup(popup_ce22fb9bc1e449979f25995899616e66)
+        ;
+
+        
+    
+    
+                marker_e3e5ab1289b56e76ad8962f5b71523e6.setIcon(icon_32b038f907254455c929681e03f5b581);
+            
+    
+            var marker_31592394f80dfed49d49c6e13ef195e2 = L.marker(
+                [53.5685, 10.0714],
+                {
+}
+            ).addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var icon_c8498682c955db8efd680044d12966f4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "ok-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_595239c1e05bf7dbf2b7f9c262d810b0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8c58672300ac7905828d657c145458e2 = $(`<div id="html_8c58672300ac7905828d657c145458e2" style="width: 100.0%; height: 100.0%;">                         <b>🔮 Wandsbek Prediction</b><br>                         🚗 Expected Vehicles: 5<br>                         🏃 Expected Speed: 43 km/h<br>                         🕐 Time: +1h from now<br>                         📅 2025-06-09T14:30                         </div>`)[0];
+                popup_595239c1e05bf7dbf2b7f9c262d810b0.setContent(html_8c58672300ac7905828d657c145458e2);
+            
+        
+
+        marker_31592394f80dfed49d49c6e13ef195e2.bindPopup(popup_595239c1e05bf7dbf2b7f9c262d810b0)
+        ;
+
+        
+    
+    
+                marker_31592394f80dfed49d49c6e13ef195e2.setIcon(icon_c8498682c955db8efd680044d12966f4);
+            
+    
+            var marker_0d8a78f4456f82065465f33d7af51655 = L.marker(
+                [53.4609, 9.9872],
+                {
+}
+            ).addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var icon_5d0b39b23b30f432469b8413f56441cd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "ok-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_af581c6f8a0f48195d4bad0ab7886313 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3d5593e9e6b14e35728c743405f23d41 = $(`<div id="html_3d5593e9e6b14e35728c743405f23d41" style="width: 100.0%; height: 100.0%;">                         <b>🔮 Harburg Prediction</b><br>                         🚗 Expected Vehicles: 3<br>                         🏃 Expected Speed: 42 km/h<br>                         🕐 Time: +1h from now<br>                         📅 2025-06-09T14:30                         </div>`)[0];
+                popup_af581c6f8a0f48195d4bad0ab7886313.setContent(html_3d5593e9e6b14e35728c743405f23d41);
+            
+        
+
+        marker_0d8a78f4456f82065465f33d7af51655.bindPopup(popup_af581c6f8a0f48195d4bad0ab7886313)
+        ;
+
+        
+    
+    
+                marker_0d8a78f4456f82065465f33d7af51655.setIcon(icon_5d0b39b23b30f432469b8413f56441cd);
+            
+    
+            var marker_635bf3b8bbef0e25618e92d5bb4b398b = L.marker(
+                [53.4892, 10.2314],
+                {
+}
+            ).addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var icon_6715751c5683bed91560b2a48dca585d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "ok-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_df78e9e50c28aea0f3511ba7c9d20c1c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f98693906db16cf98a40aac8208369f6 = $(`<div id="html_f98693906db16cf98a40aac8208369f6" style="width: 100.0%; height: 100.0%;">                         <b>🔮 Bergedorf Prediction</b><br>                         🚗 Expected Vehicles: 3<br>                         🏃 Expected Speed: 43 km/h<br>                         🕐 Time: +1h from now<br>                         📅 2025-06-09T14:30                         </div>`)[0];
+                popup_df78e9e50c28aea0f3511ba7c9d20c1c.setContent(html_f98693906db16cf98a40aac8208369f6);
+            
+        
+
+        marker_635bf3b8bbef0e25618e92d5bb4b398b.bindPopup(popup_df78e9e50c28aea0f3511ba7c9d20c1c)
+        ;
+
+        
+    
+    
+                marker_635bf3b8bbef0e25618e92d5bb4b398b.setIcon(icon_6715751c5683bed91560b2a48dca585d);
+            
+    
+            var marker_8cce6303275631edcff786560843287f = L.marker(
+                [53.5644, 9.7975],
+                {
+}
+            ).addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var icon_f41960b4fd84bd801a8c6aa0f074615d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "ok-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d40412d7fffde05abad43a0da0d8aa77 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_69b0ca750f67198c54aff741238f2c8e = $(`<div id="html_69b0ca750f67198c54aff741238f2c8e" style="width: 100.0%; height: 100.0%;">                         <b>🔮 Blankenese Prediction</b><br>                         🚗 Expected Vehicles: 3<br>                         🏃 Expected Speed: 43 km/h<br>                         🕐 Time: +1h from now<br>                         📅 2025-06-09T14:30                         </div>`)[0];
+                popup_d40412d7fffde05abad43a0da0d8aa77.setContent(html_69b0ca750f67198c54aff741238f2c8e);
+            
+        
+
+        marker_8cce6303275631edcff786560843287f.bindPopup(popup_d40412d7fffde05abad43a0da0d8aa77)
+        ;
+
+        
+    
+    
+                marker_8cce6303275631edcff786560843287f.setIcon(icon_f41960b4fd84bd801a8c6aa0f074615d);
+            
+    
+            var marker_eb0c573a2aa09675819eabb363a760b7 = L.marker(
+                [53.5676, 9.9906],
+                {
+}
+            ).addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var icon_acf755957a34abe73e07e755574f7687 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "ok-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_9803962f4efac04bbe8011e8d4c9ebaf = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b3e27c912df9ca0d92ae45ab69fc033b = $(`<div id="html_b3e27c912df9ca0d92ae45ab69fc033b" style="width: 100.0%; height: 100.0%;">                         <b>🔮 Rotherbaum Prediction</b><br>                         🚗 Expected Vehicles: 8<br>                         🏃 Expected Speed: 41 km/h<br>                         🕐 Time: +1h from now<br>                         📅 2025-06-09T14:30                         </div>`)[0];
+                popup_9803962f4efac04bbe8011e8d4c9ebaf.setContent(html_b3e27c912df9ca0d92ae45ab69fc033b);
+            
+        
+
+        marker_eb0c573a2aa09675819eabb363a760b7.bindPopup(popup_9803962f4efac04bbe8011e8d4c9ebaf)
+        ;
+
+        
+    
+    
+                marker_eb0c573a2aa09675819eabb363a760b7.setIcon(icon_acf755957a34abe73e07e755574f7687);
+            
+    
+            var marker_8756594d1395aa9ce1f7a48d900b3f77 = L.marker(
+                [53.5914, 9.9981],
+                {
+}
+            ).addTo(map_28a6a0898eba83a33992536b20c42bc4);
+        
+    
+            var icon_e9cf692b4ffc7a946472fd14808e1cbf = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "ok-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f87dbe96be05700a80f8f435ca209ceb = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2b8e8b6172c475fbb8340c2f5f00b6ba = $(`<div id="html_2b8e8b6172c475fbb8340c2f5f00b6ba" style="width: 100.0%; height: 100.0%;">                         <b>🔮 Winterhude Prediction</b><br>                         🚗 Expected Vehicles: 6<br>                         🏃 Expected Speed: 43 km/h<br>                         🕐 Time: +1h from now<br>                         📅 2025-06-09T14:30                         </div>`)[0];
+                popup_f87dbe96be05700a80f8f435ca209ceb.setContent(html_2b8e8b6172c475fbb8340c2f5f00b6ba);
+            
+        
+
+        marker_8756594d1395aa9ce1f7a48d900b3f77.bindPopup(popup_f87dbe96be05700a80f8f435ca209ceb)
+        ;
+
+        
+    
+    
+                marker_8756594d1395aa9ce1f7a48d900b3f77.setIcon(icon_e9cf692b4ffc7a946472fd14808e1cbf);
+            
+</script>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamburg Traffic Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-bottom: 3px solid #34495e;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .live-status {
+            float: right;
+            background: #e74c3c;
+            padding: 0.3rem 0.8rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 0.2rem;
+        }
+
+        .stats-container {
+            background: #ecf0f1;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid #bdc3c7;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-box {
+            background: #fff;
+            border: 2px solid #95a5a6;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 1rem;
+            padding: 1rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        .maps-section {
+            background: #fff;
+            border: 2px solid #95a5a6;
+        }
+
+        .controls {
+            background: #fff;
+            border: 2px solid #95a5a6;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .controls h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 0.5rem;
+        }
+
+        .slider-control {
+            margin: 1rem 0;
+        }
+
+        .slider-control label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            background: #bdc3c7;
+            outline: none;
+            border: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            cursor: pointer;
+            border: 2px solid #2980b9;
+        }
+
+        .time-display {
+            background: #2c3e50;
+            color: #fff;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .button-group {
+            margin-top: 1rem;
+        }
+
+        .btn {
+            background: #3498db;
+            color: #fff;
+            border: 2px solid #2980b9;
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .btn:disabled {
+            background: #95a5a6;
+            border-color: #7f8c8d;
+            cursor: not-allowed;
+        }
+
+        .maps-grid {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            height: 100%;
+        }
+
+        .maps-header {
+            background: #34495e;
+            color: #fff;
+            padding: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #2c3e50;
+        }
+
+        .maps-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 500px;
+        }
+
+        .map-panel {
+            border-right: 1px solid #bdc3c7;
+            position: relative;
+        }
+
+        .map-panel:last-child {
+            border-right: none;
+        }
+
+        .map-title {
+            background: #95a5a6;
+            color: #fff;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .map-frame {
+            width: 100%;
+            height: calc(100% - 35px);
+            border: none;
+        }
+
+        .sidebar {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 1rem;
+        }
+
+        .live-feed {
+            background: #fff;
+            border: 2px solid #95a5a6;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feed-header {
+            background: #27ae60;
+            color: #fff;
+            padding: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feed-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .activity-item {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 0.6rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .activity-item.high-traffic {
+            border-left-color: #e74c3c;
+        }
+
+        .activity-item.slow-traffic {
+            border-left-color: #f39c12;
+        }
+
+        .activity-item.highway {
+            border-left-color: #9b59b6;
+        }
+
+        .activity-time {
+            color: #7f8c8d;
+            font-size: 0.75rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .activity-message {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+            border-top: 3px solid #34495e;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2c3e50;
+            color: #fff;
+            padding: 1rem;
+            border: 2px solid #34495e;
+            max-width: 300px;
+            transform: translateX(100%);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #e74c3c;
+            border-color: #c0392b;
+        }
+
+        .notification.success {
+            background: #27ae60;
+            border-color: #229954;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #27ae60;
+            margin-right: 0.5rem;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .maps-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+                height: 600px;
+            }
+            
+            .sidebar {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>HAMBURG TRAFFIC MONITORING SYSTEM</h1>
+        <div class="live-status">
+            <span class="status-indicator"></span>LIVE
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <div class="stats-container">
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value" id="total-records">{{ stats.total_records }}</div>
+                <div class="stat-label">Recent Records</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="active-zones">{{ stats.active_zones }}</div>
+                <div class="stat-label">Active Zones</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="avg-speed">{{ stats.avg_speed }}</div>
+                <div class="stat-label">Avg Speed (km/h)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="avg-vehicles">{{ stats.avg_vehicles }}</div>
+                <div class="stat-label">Avg Vehicles</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="total-db-records">{{ stats.get('total_db_records', 0) }}</div>
+                <div class="stat-label">Total DB Records</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="maps-section">
+            <div class="maps-grid">
+                <div class="maps-header">
+                    TRAFFIC VISUALIZATION - REAL-TIME & PREDICTION
+                </div>
+                <div class="maps-container">
+                    <div class="map-panel">
+                        <div class="map-title">REAL-TIME TRAFFIC</div>
+                        <iframe src="{{ url_for('static', filename='realtime_map.html') }}" class="map-frame" id="realtime-frame"></iframe>
+                    </div>
+                    <div class="map-panel">
+                        <div class="map-title">TRAFFIC PREDICTION</div>
+                        <iframe src="{{ url_for('static', filename='prediction_map.html') }}" class="map-frame" id="prediction-frame"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="controls">
+                <h3>System Controls</h3>
+                
+                <div class="slider-control">
+                    <label for="hours-slider">Prediction Timeframe:</label>
+                    <input type="range" id="hours-slider" class="slider" min="1" max="5" value="1">
+                    <div class="time-display" id="time-display">+1 HOUR</div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn" id="predict-btn" onclick="updatePrediction()">
+                        UPDATE PREDICTION
+                    </button>
+                    <button class="btn" id="refresh-btn" onclick="refreshMaps()">
+                        REFRESH MAPS
+                    </button>
+                    <button class="btn" id="stats-btn" onclick="updateStats()">
+                        UPDATE STATS
+                    </button>
+                </div>
+            </div>
+
+            <div class="live-feed">
+                <div class="feed-header">
+                    LIVE TRAFFIC FEED
+                </div>
+                <div class="feed-content" id="live-feed-content">
+                    <div class="activity-item">
+                        <div class="activity-time">INITIALIZING...</div>
+                        <div class="activity-message">STARTING LIVE FEED...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        HAMBURG TRAFFIC SYSTEM &copy; 2025 | REAL-TIME MONITORING & ML PREDICTION
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        let currentHours = 1;
+        let isUpdating = false;
+        let liveUpdateInterval;
+        let activityUpdateInterval;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupSlider();
+            startLiveUpdates();
+            showNotification('SYSTEM ONLINE', 'success');
+        });
+
+        function setupSlider() {
+            const slider = document.getElementById('hours-slider');
+            const display = document.getElementById('time-display');
+
+            slider.addEventListener('input', function() {
+                currentHours = parseInt(this.value);
+                const hourText = currentHours === 1 ? '1 HOUR' : `${currentHours} HOURS`;
+                display.textContent = `+${hourText}`;
+            });
+        }
+
+        function startLiveUpdates() {
+            liveUpdateInterval = setInterval(updateLiveStats, 10000);
+            activityUpdateInterval = setInterval(updateActivityFeed, 5000);
+            
+            updateLiveStats();
+            updateActivityFeed();
+            
+            setInterval(function() {
+                if (!isUpdating) {
+                    refreshMaps();
+                }
+            }, 60000);
+        }
+
+        async function updateLiveStats() {
+            try {
+                const response = await fetch('/api/stats-live');
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    const stats = data.stats;
+                    
+                    document.getElementById('total-records').textContent = stats.total_records;
+                    document.getElementById('active-zones').textContent = stats.active_zones;
+                    document.getElementById('avg-speed').textContent = stats.avg_speed;
+                    document.getElementById('avg-vehicles').textContent = stats.avg_vehicles;
+                    document.getElementById('total-db-records').textContent = stats.total_db_records;
+                }
+            } catch (error) {
+                console.error('Stats update error:', error);
+            }
+        }
+
+        async function updateActivityFeed() {
+            try {
+                const response = await fetch('/api/recent-activity');
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    const feedContent = document.getElementById('live-feed-content');
+                    feedContent.innerHTML = '';
+                    
+                    data.activities.forEach(activity => {
+                        const activityDiv = document.createElement('div');
+                        activityDiv.className = `activity-item ${activity.type}`;
+                        
+                        activityDiv.innerHTML = `
+                            <div class="activity-time">${activity.timestamp}</div>
+                            <div class="activity-message">${activity.message}</div>
+                        `;
+                        
+                        feedContent.appendChild(activityDiv);
+                    });
+                }
+            } catch (error) {
+                console.error('Activity feed error:', error);
+            }
+        }
+
+        async function updatePrediction() {
+            if (isUpdating) return;
+            
+            isUpdating = true;
+            setButtonState('predict-btn', true);
+            showNotification(`GENERATING ${currentHours}H PREDICTION...`, 'info');
+
+            try {
+                const response = await fetch(`/api/predict/${currentHours}`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    const frame = document.getElementById('prediction-frame');
+                    frame.src = frame.src.split('?')[0] + '?t=' + new Date().getTime();
+                    
+                    showNotification(`PREDICTION UPDATED (+${currentHours}H)`, 'success');
+                } else {
+                    throw new Error(data.message || 'PREDICTION FAILED');
+                }
+            } catch (error) {
+                console.error('Prediction error:', error);
+                showNotification('PREDICTION FAILED', 'error');
+            } finally {
+                setButtonState('predict-btn', false);
+                isUpdating = false;
+            }
+        }
+
+        async function refreshMaps() {
+            if (isUpdating) return;
+            
+            isUpdating = true;
+            setButtonState('refresh-btn', true);
+            showNotification('REFRESHING MAPS...', 'info');
+
+            try {
+                const response = await fetch('/api/refresh');
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    const realtimeFrame = document.getElementById('realtime-frame');
+                    const predictionFrame = document.getElementById('prediction-frame');
+                    
+                    realtimeFrame.src = realtimeFrame.src.split('?')[0] + '?t=' + new Date().getTime();
+                    predictionFrame.src = predictionFrame.src.split('?')[0] + '?t=' + new Date().getTime();
+                    
+                    showNotification('MAPS REFRESHED', 'success');
+                } else {
+                    throw new Error(data.message || 'REFRESH FAILED');
+                }
+            } catch (error) {
+                console.error('Refresh error:', error);
+                showNotification('REFRESH FAILED', 'error');
+            } finally {
+                setButtonState('refresh-btn', false);
+                isUpdating = false;
+            }
+        }
+
+        async function updateStats() {
+            setButtonState('stats-btn', true);
+            showNotification('UPDATING STATISTICS...', 'info');
+            
+            try {
+                await updateLiveStats();
+                showNotification('STATS UPDATED', 'success');
+            } catch (error) {
+                showNotification('STATS UPDATE FAILED', 'error');
+            } finally {
+                setButtonState('stats-btn', false);
+            }
+        }
+
+        function setButtonState(buttonId, loading) {
+            const button = document.getElementById(buttonId);
+            if (loading) {
+                button.disabled = true;
+                button.textContent = 'PROCESSING...';
+            } else {
+                button.disabled = false;
+                if (buttonId === 'predict-btn') button.textContent = 'UPDATE PREDICTION';
+                else if (buttonId === 'refresh-btn') button.textContent = 'REFRESH MAPS';
+                else if (buttonId === 'stats-btn') button.textContent = 'UPDATE STATS';
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+                if (!liveUpdateInterval) {
+                    startLiveUpdates();
+                }
+            } else {
+                if (liveUpdateInterval) {
+                    clearInterval(liveUpdateInterval);
+                    clearInterval(activityUpdateInterval);
+                    liveUpdateInterval = null;
+                    activityUpdateInterval = null;
+                }
+            }
+        });
+
+        window.addEventListener('beforeunload', function() {
+            if (liveUpdateInterval) {
+                clearInterval(liveUpdateInterval);
+                clearInterval(activityUpdateInterval);
+            }
+        });
+    </script>
+</body>
+</html>
