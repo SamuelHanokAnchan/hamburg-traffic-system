@@ -59,6 +59,7 @@ xgboost
 scikit-learn
 joblib
 google-cloud-bigquery
+schedule
 ```
 
 ### 3. Set Up Kafka Infrastructure
