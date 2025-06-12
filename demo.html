@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamburg Traffic System - Architecture Diagram</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            margin: 0;
+            padding: 30px;
+            background: #ffffff;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 30px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #666;
+            padding-bottom: 10px;
+        }
+        
+        .architecture {
+            position: relative;
+            width: 100%;
+            height: 600px;
+        }
+        
+        .layer {
+            position: absolute;
+            border: 1px solid #666;
+            background: white;
+        }
+        
+        .layer-header {
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+            padding: 6px 10px;
+            text-align: center;
+        }
+        
+        .layer-content {
+            padding: 12px;
+            background: white;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .layer-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .layer-subtitle {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        /* Data Source */
+        .data-source {
+            top: 50px;
+            left: 50px;
+            width: 160px;
+        }
+        .data-source .layer-header {
+            background: #4a4a4a;
+        }
+        
+        /* Streaming Middleware */
+        .streaming {
+            top: 50px;
+            left: 280px;
+            width: 160px;
+        }
+        .streaming .layer-header {
+            background: #666666;
+        }
+        
+        /* Processing Layer */
+        .processing {
+            top: 50px;
+            left: 510px;
+            width: 160px;
+        }
+        .processing .layer-header {
+            background: #7a7a7a;
+        }
+        
+        /* Data Storage */
+        .storage {
+            top: 200px;
+            right: 50px;
+            width: 160px;
+        }
+        .storage .layer-header {
+            background: #555555;
+        }
+        
+        /* ML Prediction */
+        .ml {
+            top: 200px;
+            right: 280px;
+            width: 160px;
+        }
+        .ml .layer-header {
+            background: #6a6a6a;
+        }
+        
+        /* Visualization */
+        .visualization {
+            top: 200px;
+            left: 50px;
+            width: 160px;
+        }
+        .visualization .layer-header {
+            background: #585858;
+        }
+        
+        /* Batch Processing */
+        .batch {
+            bottom: 50px;
+            left: 50px;
+            right: 50px;
+            height: 120px;
+        }
+        .batch .layer-header {
+            background: #636363;
+        }
+        .batch .layer-content {
+            min-height: 80px;
+        }
+        .batch-jobs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            font-size: 10px;
+            color: #333;
+            text-align: left;
+        }
+        .batch-job {
+            padding: 3px 6px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-left: 2px solid #666;
+        }
+        
+        /* Arrows */
+        .arrow {
+            position: absolute;
+            z-index: 10;
+        }
+        
+        .arrow-line {
+            stroke: #333;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+        
+        .arrow-thick {
+            stroke-width: 2;
+            stroke: #333;
+        }
+        
+        .arrow-dashed {
+            stroke-dasharray: 4,4;
+            stroke: #666;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .architecture {
+                height: 800px;
+            }
+            .layer {
+                position: relative !important;
+                margin: 20px 0;
+                width: 100% !important;
+                left: 0 !important;
+                right: 0 !important;
+                top: 0 !important;
+                bottom: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">HAMBURG TRAFFIC SYSTEM ARCHITECTURE</div>
+        
+        <div class="architecture">
+            <!-- SVG for arrows -->
+            <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; z-index: 1;">
+                <defs>
+                    <marker id="arrowhead" markerWidth="8" markerHeight="6" 
+                     refX="7" refY="3" orient="auto">
+                        <polygon points="0 0, 8 3, 0 6" fill="#333" />
+                    </marker>
+                </defs>
+                
+                <!-- Main data flow arrows -->
+                <line x1="210" y1="110" x2="280" y2="110" class="arrow-line" />
+                <line x1="440" y1="110" x2="510" y2="110" class="arrow-line" />
+                <line x1="590" y1="170" x2="590" y2="200" class="arrow-line" />
+                
+                <!-- Storage to ML to Visualization -->
+                <line x1="950" y1="260" x2="900" y2="260" class="arrow-line" />
+                <line x1="840" y1="260" x2="220" y2="260" class="arrow-line" />
+                
+                <!-- Batch processing arrows -->
+                <line x1="400" y1="420" x2="400" y2="380" class="arrow-line arrow-dashed" />
+                <line x1="600" y1="420" x2="600" y2="380" class="arrow-line arrow-dashed" />
+                <line x1="800" y1="420" x2="800" y2="380" class="arrow-line arrow-dashed" />
+            </svg>
+            
+            <!-- Data Source Layer -->
+            <div class="layer data-source">
+                <div class="layer-header">DATA SOURCE</div>
+                <div class="layer-content">
+                    <div class="layer-title">Traffic Producer</div>
+                    <div class="layer-subtitle">Faker Library<br>1 msg/sec<br>Hamburg Data</div>
+                </div>
+            </div>
+            
+            <!-- Streaming Middleware -->
+            <div class="layer streaming">
+                <div class="layer-header">STREAMING MIDDLEWARE</div>
+                <div class="layer-content">
+                    <div class="layer-title">Apache Kafka</div>
+                    <div class="layer-subtitle">Topic:<br>hamburg_traffic<br>Real-time Ingestion</div>
+                </div>
+            </div>
+            
+            <!-- Processing Layer -->
+            <div class="layer processing">
+                <div class="layer-header">PROCESSING LAYER</div>
+                <div class="layer-content">
+                    <div class="layer-title">Stream Consumer</div>
+                    <div class="layer-subtitle">Real-time Analytics<br>Micro-batch Processing<br>Quality Validation</div>
+                </div>
+            </div>
+            
+            <!-- Data Storage Layer -->
+            <div class="layer storage">
+                <div class="layer-header">DATA STORAGE LAYER</div>
+                <div class="layer-content">
+                    <div class="layer-title">Snowflake Cloud DW</div>
+                    <div class="layer-subtitle">HAMBURG_TRAFFIC_LIVE<br>HOURLY_SUMMARY<br>DAILY_SUMMARY</div>
+                </div>
+            </div>
+            
+            <!-- ML Prediction Layer -->
+            <div class="layer ml">
+                <div class="layer-header">ML PREDICTION LAYER</div>
+                <div class="layer-content">
+                    <div class="layer-title">XGBoost Models</div>
+                    <div class="layer-subtitle">Vehicle Count Predictor<br>Speed Predictor<br>R² = 0.847 / 0.792</div>
+                </div>
+            </div>
+            
+            <!-- Visualization Layer -->
+            <div class="layer visualization">
+                <div class="layer-header">VISUALIZATION LAYER</div>
+                <div class="layer-content">
+                    <div class="layer-title">Flask Dashboard</div>
+                    <div class="layer-subtitle">Interactive Maps<br>Folium Visualization<br>Real-time Updates</div>
+                </div>
+            </div>
+            
+            <!-- Batch Processing Layer -->
+            <div class="layer batch">
+                <div class="layer-header">BATCH PROCESSING LAYER</div>
+                <div class="layer-content">
+                    <div class="layer-title">Python Schedule Orchestrator</div>
+                    <div class="batch-jobs">
+                        <div class="batch-job">• Hourly Aggregation (XX:05)</div>
+                        <div class="batch-job">• Data Quality Checks (6h intervals)</div>
+                        <div class="batch-job">• Daily Summary (02:00)</div>
+                        <div class="batch-job">• Model Retraining (Sunday 03:00)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
